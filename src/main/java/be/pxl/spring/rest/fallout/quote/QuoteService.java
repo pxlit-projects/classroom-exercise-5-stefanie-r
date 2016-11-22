@@ -15,7 +15,7 @@ public class QuoteService {
 
     @Autowired
     private AuthorService authorService;
-
+@Transactional
     public Quote createQuote(Quote quoteToBeCreated) {
         Quote quote = quoteRepository.save(quoteToBeCreated);
         authorService.create(quoteToBeCreated.getAuthor());
