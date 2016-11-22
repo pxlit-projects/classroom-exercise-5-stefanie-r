@@ -1,5 +1,6 @@
 package be.pxl.spring.rest.fallout.quote;
 
+import be.pxl.spring.rest.fallout.author.Author;
 import be.pxl.spring.rest.fallout.author.AuthorService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +23,7 @@ public class QuoteServiceTest {
     @InjectMocks
     private QuoteService quoteService;
 
-    @Test
+   /* @Test
     public void createQuote_SavesQuoteBeforeSavingAuthor() throws Exception {
         Quote quote = aQuote().withAuthor("Hannibal").withQuotation("I love it when a plan comes together").build();
 
@@ -31,5 +32,16 @@ public class QuoteServiceTest {
         InOrder inOrder = Mockito.inOrder(quoteRepositoryMock, authorServiceMock);
         inOrder.verify(quoteRepositoryMock).save(quote);
         inOrder.verify(authorServiceMock).create("Hannibal");
+    }*/
+
+    @Test
+    public void createQuote_SavesAuthorBeforeSavingQuote() throws Exception {
+        Quote quote = aQuote().withAuthor("Hannibal").withQuotation("I love it when a plan comes together").build();
+
+        quoteService.createQuote(quote);
+
+        InOrder inOrder = Mockito.inOrder(authorServiceMock, quoteRepositoryMock);
+        inOrder.verify(authorServiceMock).create("Hannibal");
+        inOrder.verify(quoteRepositoryMock).save(quote);
     }
 }

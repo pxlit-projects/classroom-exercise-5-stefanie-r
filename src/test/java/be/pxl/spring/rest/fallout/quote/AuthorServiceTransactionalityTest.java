@@ -1,10 +1,8 @@
 package be.pxl.spring.rest.fallout.quote;
 
-import be.pxl.spring.rest.fallout.author.Author;
 import be.pxl.spring.rest.fallout.author.AuthorRepository;
 import be.pxl.spring.rest.fallout.author.AuthorService;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,19 +14,21 @@ import static be.pxl.spring.rest.fallout.quote.QuoteTestBuilder.aQuote;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+/**
+ * Created by stefanie on 22/11/2016.
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Ignore
-public class QuoteServiceTransactionalityTest {
+public class AuthorServiceTransactionalityTest {
 
     @Autowired
     private QuoteRepository quoteRepository;
     @Autowired
     private AuthorRepository authorRepository;
-    @MockBean
+    @Autowired
     private AuthorService authorServiceMock;
 
-    @Autowired
+    @MockBean
     private QuoteService quoteService;
 
     @Before
@@ -36,20 +36,19 @@ public class QuoteServiceTransactionalityTest {
         quoteRepository.deleteAll();
         authorRepository.deleteAll();
     }
-
     @Test
-    public void createQuote_WhenAuthorServiceThrowsException_QuoteIsNotPersisted() throws Exception {
+    public void createAuthor_WhenQuoteServiceThrowsException_AthorIsNotPersisted() throws Exception {
         String jamie = "Jamie";
         Quote newQuote = aQuote().withAuthor(jamie).withQuotation("As ze mn pet aanraken ja dan flip ik altijd").build();
 
-        when(authorServiceMock.create(jamie)).thenThrow(UnsupportedOperationException.class);
+        when(quoteService.createQuote(newQuote)).thenThrow(UnsupportedOperationException.class);
 
         try {
-            quoteService.createQuote(newQuote);
+            authorServiceMock.create(jamie);
         } catch (UnsupportedOperationException uoe) {
             //nom nom nom
         }
 
-        assertThat(quoteRepository.findAll()).isEmpty();
+        assertThat(authorRepository.findAll()).isNotEmpty();
     }
 }

@@ -10,7 +10,7 @@ public class AuthorService {
 
     @Autowired
     private AuthorRepository authorRepository;
-
+@Transactional
     public Author create(String authorName) {
         Author author = authorRepository.findByName(authorName);
         if (author == null) {

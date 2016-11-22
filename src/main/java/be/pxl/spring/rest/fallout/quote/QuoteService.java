@@ -17,8 +17,8 @@ public class QuoteService {
     private AuthorService authorService;
 @Transactional
     public Quote createQuote(Quote quoteToBeCreated) {
-        Quote quote = quoteRepository.save(quoteToBeCreated);
         authorService.create(quoteToBeCreated.getAuthor());
+        Quote quote = quoteRepository.save(quoteToBeCreated);
         return quote;
     }
 
